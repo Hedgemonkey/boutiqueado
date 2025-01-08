@@ -148,6 +148,17 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATICFILES_DIRS = [
+    BASE_DIR / "static",  # Add this if your base.css is in a project-level "static" folder
+    # ... any other static file locations
+]
+
+# Media files (uploaded images, etc.)
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
