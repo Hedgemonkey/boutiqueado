@@ -55,6 +55,15 @@ def all_products(request):
         'search_term': query,
         'current_categories': categories,
         'current_sorting': current_sorting,
+        'sort_none': current_sorting == 'None_None',
+        'sort_price_asc': current_sorting == 'price_asc',
+        'sort_price_desc': current_sorting == 'price_desc',
+        'sort_rating_asc': current_sorting == 'rating_asc',
+        'sort_rating_desc': current_sorting == 'rating_desc',
+        'sort_name_asc': current_sorting == 'name_asc',
+        'sort_name_desc': current_sorting == 'name_desc',
+        'sort_category_asc': current_sorting == 'category_asc',
+        'sort_category_desc': current_sorting == 'category_desc',
     }
 
     return render(request, 'products/products.html', context)
