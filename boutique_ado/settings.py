@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+load_dotenv()  # Load.env file
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -188,5 +191,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 FREE_DELIVERY_THRESHOLD = 50
 STANDARD_DELIVERY_PERCENTAGE = 10
 STRIPE_CURRENCY = 'usd'
-STRIPE_PUBLIC_KEY = os.getenv('STRIPE_PUBLIC_KEY', 'pk_test_51QkbdhJx4sWQ90gDPUBl5k8G3dS75ZMYnqkji9UX4q1mS5bG7vZQAIxBAr2TVOlZJZy8TJgRklraEV6x2phe1Bu900YbSb22fm')
-STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY', 'sk_test_51QkbdhJx4sWQ90gDsvuSjQJdeYDXLphog93iDHSqPXXja5w7zZObjwh1bebrlsrKU8qWuvaSyk7K8TkEYxMZVUnm00ub3Dp1a4')
+STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY").replace(" ","").replace("\n","")
+STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY").replace(" ","").replace("\n","")
+STRIPE_WH_SECRET = os.environ.get("STRIPE_WH_SECRET").replace(" ","").replace("\n","")
