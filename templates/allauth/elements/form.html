@@ -1,7 +1,13 @@
 {% load allauth %}
 <form method="{{ attrs.method }}" action="{{ attrs.action }}">
-    {% slot body %}
-    {% endslot %}
-    {% slot actions %}
-    {% endslot %}
+    {% csrf_token %}  {# CSRF protection #}
+    {% if form.non_field_errors %}  {# Display non-field errors #}
+        <ul class="unstyled">
+            {% for error in form.non_field_errors %}
+                <li class="text-danger"><small>{{ error|escape }}</small></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {% slot body %}{% endslot %}  {# Body content goes here #}
+    {% slot actions %}{% endslot %} {# Action content (buttons, etc.) goes here #}
 </form>
