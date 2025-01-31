@@ -197,3 +197,6 @@ STRIPE_CURRENCY = 'usd'
 STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY").replace(" ","").replace("\n","")
 STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY").replace(" ","").replace("\n","")
 STRIPE_WH_SECRET = os.environ.get("STRIPE_WH_SECRET").replace(" ","").replace("\n","")
+
+# Email
+DEFAULT_FROM_EMAIL = 'boutiqueado@example.com'
