@@ -1,9 +1,10 @@
-from django.shortcuts import render, get_object_or_404, redirect, reverse
+from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib import messages
 from django.db.models import Q
 from django.db.models.functions import Lower
-from bag import views as bag_views
+
 from .models import Product, Category
+from .forms import ProductForm
 
 # Create your views here.
 
@@ -16,26 +17,21 @@ def all_products(request):
     sort = None
     direction = None
 
-
     if request.GET:
-        if'sort' in request.GET:
+        if 'sort' in request.GET:
             sortkey = request.GET['sort']
             sort = sortkey
-
             if sortkey == 'name':
                 sortkey = 'lower_name'
                 products = products.annotate(lower_name=Lower('name'))
-
             if sortkey == 'category':
                 sortkey = 'category__name'
-
             if 'direction' in request.GET:
                 direction = request.GET['direction']
                 if direction == 'desc':
                     sortkey = f'-{sortkey}'
             products = products.order_by(sortkey)
-
-
+            
         if 'category' in request.GET:
             categories = request.GET['category'].split(',')
             products = products.filter(category__name__in=categories)
@@ -46,7 +42,7 @@ def all_products(request):
             if not query:
                 messages.error(request, "You didn't enter any search criteria!")
                 return redirect(reverse('products'))
-
+            
             queries = Q(name__icontains=query) | Q(description__icontains=query)
             products = products.filter(queries)
 
@@ -57,15 +53,6 @@ def all_products(request):
         'search_term': query,
         'current_categories': categories,
         'current_sorting': current_sorting,
-        'sort_none': current_sorting == 'None_None',
-        'sort_price_asc': current_sorting == 'price_asc',
-        'sort_price_desc': current_sorting == 'price_desc',
-        'sort_rating_asc': current_sorting == 'rating_asc',
-        'sort_rating_desc': current_sorting == 'rating_desc',
-        'sort_name_asc': current_sorting == 'name_asc',
-        'sort_name_desc': current_sorting == 'name_desc',
-        'sort_category_asc': current_sorting == 'category_asc',
-        'sort_category_desc': current_sorting == 'category_desc',
     }
 
     return render(request, 'products/products.html', context)
@@ -80,8 +67,15 @@ def product_detail(request, product_id):
         'product': product,
     }
 
-    #if request.method == 'POST':  # Handle add to bag from POST
-     #   bag_views.add_to_bag(request, product_id)
-      #  return render(request, 'products/product_detail.html', context)  # Render, don't redirect
-
     return render(request, 'products/product_detail.html', context)
+
+
+def add_product(request):
+    """ Add a product to the store """
+    form = ProductForm()
+    template = 'products/add_product.html'
+    context = {
+        'form': form,
+    }
+
+    return render(request, template, context)
