@@ -181,9 +181,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_DIRS = [
-    BASE_DIR / "static",  # Add this if your base.css is in a project-level "static" folder
+    os.path.join(BASE_DIR, 'static'),  # Add this if your base.css is in a project-level "static" folder
     # ... any other static file locations
 ]
 
