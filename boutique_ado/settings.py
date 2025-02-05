@@ -92,9 +92,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
                 'bag.contexts.bag_contents',
-            ],DATABASES = {
-    'default': dj_database_url.parse('postgresql://neondb_owner:9PJZirMgh1IB@ep-blue-mouse-a2wukk26.eu-central-1.aws.neon.tech/affix_chase_glove_871558')
-}
+            ],
 
             'builtins': [
                 'crispy_forms.templatetags.crispy_forms_tags',
