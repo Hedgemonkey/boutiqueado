@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
 from dotenv import load_dotenv
 
 load_dotenv()  # Load.env file
@@ -29,7 +30,7 @@ SECRET_KEY = 'django-insecure-+%p2jl=$2kwcig5-7v1^ogy!v8q^0-w1j1855!8)rs)%3$+=6w
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [ 'localhost', '127.0.0.1', '0.0.0.0', '*']
+ALLOWED_HOSTS = ['*.herokuapp.com', 'localhost', '127.0.0.1', '0.0.0.0', '*']
 
 
 # Application definition
@@ -91,7 +92,10 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
                 'bag.contexts.bag_contents',
-            ],
+            ],DATABASES = {
+    'default': dj_database_url.parse('postgresql://neondb_owner:9PJZirMgh1IB@ep-blue-mouse-a2wukk26.eu-central-1.aws.neon.tech/affix_chase_glove_871558')
+}
+
             'builtins': [
                 'crispy_forms.templatetags.crispy_forms_tags',
                 'crispy_forms.templatetags.crispy_forms_field',
@@ -106,13 +110,17 @@ WSGI_APPLICATION = 'boutique_ado.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+if 'DATABASE_URL' in os.environ:
+    DATABASES = {
+        'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
+    }
+else:
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
