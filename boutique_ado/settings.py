@@ -200,6 +200,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # AWS S3
 if 'USE_AWS' in os.environ:
+    print("Using AWS for storage")  # Debug print
     # Bucket Config
     AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
     AWS_S3_REGION_NAME = os.environ.get('AWS_S3_REGION_NAME')
@@ -216,6 +217,10 @@ if 'USE_AWS' in os.environ:
     # Override static and media URLs in production
     STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATICFILES_LOCATION}/'
     MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{MEDIAFILES_LOCATION}/'
+    
+    print(f"Bucket Name set to: {AWS_STORAGE_BUCKET_NAME}") # Check if bucket name is set
+    print(f"Static URL set to: {STATIC_URL}") # Check the STATIC_URL being set.
+    print(f"Media URL set to: {MEDIA_URL}") # Check the MEDIA_URL being set.
 
 
 # Stripe
