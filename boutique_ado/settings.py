@@ -209,9 +209,9 @@ if 'USE_AWS' in os.environ:
     AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
 
     # Static and Media Files
-    STATICFILES_STORAGE = 'storages.backends.s3boto.S3Boto3Storage'
+    STATICFILES_STORAGE = "storages.backends.s3.S3Storage"
     STATICFILES_LOCATION = 'static'
-    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3Boto3Storage'
+    DEFAULT_FILE_STORAGE = "storages.backends.s3.S3Storage"
     MEDIAFILES_LOCATION = 'media'
 
     # Override static and media URLs in production
