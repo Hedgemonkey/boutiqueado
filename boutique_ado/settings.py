@@ -221,6 +221,9 @@ if 'USE_AWS' in os.environ:
     print(f"Bucket Name set to: {AWS_STORAGE_BUCKET_NAME}") # Check if bucket name is set
     print(f"Static URL set to: {STATIC_URL}") # Check the STATIC_URL being set.
     print(f"Media URL set to: {MEDIA_URL}") # Check the MEDIA_URL being set.
+    print(f"STATICFILES_STORAGE set to: {STATICFILES_STORAGE}") # Check the STATICFILES_STORAGE being set.
+    print(f"DEFAULT_FILE_STORAGE set to: {DEFAULT_FILE_STORAGE}") # Check the DEFAULT_FILE_STORAGE being set.
+    
 
 
 # Stripe
