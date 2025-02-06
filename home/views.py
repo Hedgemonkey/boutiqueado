@@ -35,7 +35,8 @@ def test_s3_connection(request):  # Create a test view (add to urls.py)
 
 
 def upload_static_to_s3():
-    if 'USE_AWS' in os.environ: # Only try if USE_AWS is True
+    if 'USE_AWS' in os.environ:  # Only try if USE_AWS is True
+        print("USE_AWS set to True. Uploading static files to S3...")  # Debug print
         try:
 
             s3 = boto3.client('s3')  # No credentials needed if configured in config vars.
