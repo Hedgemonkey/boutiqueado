@@ -32,3 +32,40 @@ def test_s3_connection(request):  # Create a test view (add to urls.py)
 
     else:
         return HttpResponse("USE_AWS not set", status=200)
+
+
+def upload_static_to_s3():
+    if 'USE_AWS' in os.environ: # Only try if USE_AWS is True
+        try:
+
+            s3 = boto3.client('s3')  # No credentials needed if configured in config vars.
+
+            # Iterate through the 'staticfiles' directory
+            static_root = settings.STATIC_ROOT
+            for root, _, files in os.walk(static_root):  # Use os.walk() for subdirectories
+                for file in files:
+                    local_path = os.path.join(root, file)
+                    relative_path = os.path.relpath(local_path, static_root) # gets relative path from STATIC_ROOT
+                    s3_path = os.path.join(settings.STATICFILES_LOCATION, relative_path) # create full s3 path.
+                    print(f"Uploading: {local_path} to s3://{settings.AWS_STORAGE_BUCKET_NAME}/{s3_path}")
+
+                    # Upload with appropriate content type
+                    # (Important for CSS, JS, images to be served correctly)
+                    content_type = None # add handling for different file types here.
+                    if s3_path.endswith(('.css')):
+                        content_type = 'text/css'
+                    elif s3_path.endswith(('.js')):
+                        content_type = 'text/javascript'
+                    elif s3_path.endswith(('.png', '.jpg', '.jpeg', '.gif', '.svg')): # Images
+                        content_type = 'image/' + s3_path.split('.')[-1] # Set image mimetype.
+
+                    with open(local_path, 'rb') as f: # Read in binary mode.
+                        s3.upload_fileobj(f, settings.AWS_STORAGE_BUCKET_NAME, s3_path, ExtraArgs={'ContentType': content_type or 'binary/octet-stream'})
+
+            print("Static files uploaded to S3 successfully.")
+
+        except Exception as e:
+            print(f"S3 Upload Error: {e}")  # Print any exceptions.
+
+    else:
+        print("USE_AWS is not set. Skipping S3 upload.")
