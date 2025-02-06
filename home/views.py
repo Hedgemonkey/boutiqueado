@@ -37,55 +37,41 @@ def test_s3_connection(request):  # Create a test view (add to urls.py)
         return HttpResponse("USE_AWS not set", status=200)
 
 
-def upload_static_to_s3(request):  # Create a view to upload static files to S3 (add to urls.py)
-    print("Uploading static files to S3...")  # Debug print
-    if 'USE_AWS' in os.environ:  # Only try if USE_AWS is True
-        print("USE_AWS set to True. Uploading static files to S3...")  # Debug print
+def upload_static_to_s3(request):
+    if 'USE_AWS' in os.environ:
+        print('USE_AWS is True')
+
         try:
+            s3 = boto3.client('s3')
 
-            s3 = boto3.client(
-                's3',
-                region_name=settings.AWS_S3_REGION_NAME,
-                aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-                aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-            )  # No credentials needed if configured in config vars.
+            def upload_files(root_path, s3_location): # helper function for both static and media files
+                if os.path.exists(root_path): # check directory exists
+                    for root, _, files in os.walk(root_path): # upload subdirectories too
+                        for file in files:
+                            local_path = os.path.join(root, file)
+                            relative_path = os.path.relpath(local_path, root_path)
+                            s3_path = os.path.join(s3_location, relative_path) # gets correct path to file for s3
 
-            # Iterate through the 'staticfiles' directory
-            static_root = settings.STATIC_ROOT
-            for root, _, files in os.walk(static_root):  # Use os.walk() for subdirectories
-                for file in files:
-                    local_path = os.path.join(root, file)
-                    relative_path = os.path.relpath(local_path, static_root)  # gets relative path from STATIC_ROOT
-                    s3_path = os.path.join(settings.STATICFILES_LOCATION, relative_path)  # create full s3 path.
-                    print(f"Uploading: {local_path} to s3://{settings.AWS_STORAGE_BUCKET_NAME}/{s3_path}")
+                            print(f"Uploading: {local_path} to s3://{settings.AWS_STORAGE_BUCKET_NAME}/{s3_path}") # debug print
 
-                    # Upload with appropriate content type
-                    # (Important for CSS, JS, images to be served correctly)
-                    content_type = None  # add handling for different file types here.
-                    if s3_path.endswith(('.css')):
-                        content_type = 'text/css'
-                    elif s3_path.endswith(('.js')):
-                        content_type = 'text/javascript'
-                    elif s3_path.endswith(('.png', '.jpg', '.jpeg', '.gif', '.svg')):  # Images
-                        content_type = 'image/' + s3_path.split('.')[-1]  # Set image mimetype.
 
-                    with open(local_path, 'rb') as f:  # Read in binary mode.
-                        s3.upload_fileobj(
-                            f,
-                            settings.AWS_STORAGE_BUCKET_NAME,
-                            s3_path,
-                            ExtraArgs={
-                                'ContentType': content_type or 'binary/octet-stream'
-                                }
-                            )
+                            with open(local_path, 'rb') as f:
+                                s3.upload_fileobj(f, settings.AWS_STORAGE_BUCKET_NAME, s3_path)  # Simpler upload
 
-            print("Static files uploaded to S3 successfully.")
-            return HttpResponse("Static Files Uploaded to S3")  # Success response.
+            # Static files
+            print("Uploading static files...")
+            upload_files(settings.STATIC_ROOT, settings.STATICFILES_LOCATION) # uses helper function.
+
+            # Media files
+            print("Uploading media files...")
+            upload_files(settings.MEDIA_ROOT, settings.MEDIAFILES_LOCATION)  # Call for media files
+            print('Media files uploaded') # check if method was called for uploading media files
+
+            return HttpResponse("Static and Media Files Uploaded to S3")
 
         except Exception as e:
-            print(f"S3 Upload Error: {e}")  # Print any exceptions.
+            print(f"S3 Upload Error: {e}")
             return HttpResponse(f"S3 Upload Failed: {e}", status=500)
-
     else:
-        print("USE_AWS is not set. Skipping S3 upload.")
+        print('USE_AWS is not True')
         return HttpResponse("USE_AWS not set", status=200)
