@@ -16,32 +16,6 @@ import dj_database_url
 from dotenv import load_dotenv
 
 load_dotenv()  # Load.env file
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False, # Crucial: Allows boto3 logging
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        # Fine-grained logging for boto3 and s3transfer
-        'boto3': {
-            'handlers': ['console'],
-            'level': 'DEBUG', # shows most detail
-        },
-        's3transfer': { # s3 specific logs
-            'handlers': ['console'],
-            'level': 'DEBUG',
-        },
-
-        'django.request': {  # Log HTTP requests (optional but helpful)
-            'handlers': ['console'],
-            'level': 'DEBUG',
-            'propagate': False, # Ensures these logs don't appear multiple times. #}
-        },
-    },
-}
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
