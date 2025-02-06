@@ -201,7 +201,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # AWS S3
 if 'USE_AWS' in os.environ:
-    print("Using AWS for storage")  # Debug print
     # Bucket Config
     AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
     AWS_S3_REGION_NAME = os.environ.get('AWS_S3_REGION_NAME')
@@ -218,15 +217,6 @@ if 'USE_AWS' in os.environ:
     # Override static and media URLs in production
     STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATICFILES_LOCATION}/'
     MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{MEDIAFILES_LOCATION}/'
-    
-    print(f"Bucket Name set to: {AWS_STORAGE_BUCKET_NAME}") # Check if bucket name is set
-    print(f"Static URL set to: {STATIC_URL}") # Check the STATIC_URL being set.
-    print(f"Media URL set to: {MEDIA_URL}") # Check the MEDIA_URL being set.
-    print(f"AWS_S3_REGION_NAME set to: {AWS_S3_REGION_NAME}") # Check the AWS_S3_REGION_NAME being set.
-    print(f"AWS_ACCESS_KEY_ID set to: {AWS_ACCESS_KEY_ID}") # Check the AWS_ACCESS_KEY_ID being set.
-    print(f"AWS_SECRET_ACCESS_KEY set to: {AWS_SECRET_ACCESS_KEY}") # Check the AWS_SECRET_ACCESS_KEY being set.
-    print(f"STATICFILES_STORAGE set to: {STATICFILES_STORAGE}") # Check the STATICFILES_STORAGE being set.
-    print(f"DEFAULT_FILE_STORAGE set to: {DEFAULT_FILE_STORAGE}") # Check the DEFAULT_FILE_STORAGE being set.
 
 
 
