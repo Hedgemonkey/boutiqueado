@@ -64,9 +64,12 @@ def upload_static_to_s3():
                         s3.upload_fileobj(f, settings.AWS_STORAGE_BUCKET_NAME, s3_path, ExtraArgs={'ContentType': content_type or 'binary/octet-stream'})
 
             print("Static files uploaded to S3 successfully.")
+            return HttpResponse("Static Files Uploaded to S3")  # Success response.
 
         except Exception as e:
             print(f"S3 Upload Error: {e}")  # Print any exceptions.
+            return HttpResponse(f"S3 Upload Failed: {e}", status=500)
 
     else:
         print("USE_AWS is not set. Skipping S3 upload.")
+        return HttpResponse("USE_AWS not set", status=200)
